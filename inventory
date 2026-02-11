@@ -1,0 +1,8 @@
+fax1 ansible_host=26.13.115.96 ansible_port=33130 ansible_user=fax1 ansible_ssh_private_key_file=~/.ssh/ansible
+ansible ansible_host=26.219.142.181 ansible_port=33120 ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/ansible
+ansible1 ansible_host=26.219.142.181 ansible_port=33110 ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/ansible
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+
