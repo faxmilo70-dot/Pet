@@ -1,0 +1,26 @@
+- name: apt_update
+  ansible.builtin.apt:  
+    update_cache: true
+
+- name: tools
+  ansible.builtin.apt:
+    name:
+      - wget
+      - htop
+      - tcpdump
+      - net-tools
+      - iotop
+      - curl
+      - iostat
+      - traceroute
+      - iproute2
+      - nmon
+      - lsof
+      - nano
+      - tmux
+      - mc
+      - vim
+      - dstat
+      - ncdu
+      - bash-completion
+      - atop
