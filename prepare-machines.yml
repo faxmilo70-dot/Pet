@@ -1,0 +1,14 @@
+--- 
+
+- name: Start first roles
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Role start
+      ansible.builtin.include_role:
+        name: prepare-os
+      vars: 
+        all_base_settings: false
+        main_users_and_groups: true
+        simple_tools_update_cache: false

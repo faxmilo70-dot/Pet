@@ -1,26 +1,11 @@
-- name: apt_update
-  ansible.builtin.apt:  
-    update_cache: true
+- name: Common settings for all hosts
+  ansible.builtin.include_tasks: common.yml
+  when: all_base_settings
 
-- name: tools
-  ansible.builtin.apt:
-    name:
-      - wget
-      - htop
-      - tcpdump
-      - net-tools
-      - iotop
-      - curl
-      - iostat
-      - traceroute
-      - iproute2
-      - nmon
-      - lsof
-      - nano
-      - tmux
-      - mc
-      - vim
-      - dstat
-      - ncdu
-      - bash-completion
-      - atop
+- name: Users and groups
+  ansible.builtin.include_tasks: users.yml
+  when: main_users_and_groups
+
+- name: Update cache tools and purge
+  ansible.builtin.include_tasks: packages.yml
+  when: simple_tools_update_cache 

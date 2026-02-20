@@ -1,0 +1,11 @@
+- name: restart_sshd
+  service: name=sshd state=restarted
+
+- name: Reboot host
+  ansible.builtin.reboot:
+
+- name: Ensure rsyslog is restarted
+  listen: restart rsyslog
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted

@@ -1,0 +1,46 @@
+- name: Disable auto updates
+  ansible.builtin.systemd:
+    name: unattended-upgrades
+    state: stopped
+    enabled: false
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Rsyslog.conf must be created
+  ansible.builtin.template:
+    src: rsyslog.conf.j2
+    dest: /etc/rsyslog.conf
+    mode: '0644'
+  notify: restart rsyslog
+
+- name: Set timezone
+  community.general.timezone:
+    name: '{{ timezone }}'
+  notify: Reboot host
+
+- name: Nopassword sudo for sudo is configured
+  copy:
+    src: sudo-nopasswd
+    dest: /etc/sudoers.d/sudo-nopasswd
+    owner: root
+    group: root
+    mode: 0440
+
+- name: Sshd settings are configured
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.string }}"
+    state: present
+  loop:
+    - { regexp: '^#?Port ', string: 'Port {{ ssh_port }}' }
+    - { regexp: '^#?PermitRootLogin ', string: 'PermitRootLogin no' }
+    - { regexp: '^#?PermitEmptyPasswords ', string: 'PermitEmptyPasswords no' }
+    - { regexp: '^#?PubkeyAuthentication ', string: 'PubkeyAuthentication yes' }
+    - { regexp: '^#?PasswordAuthentication ', string: 'PasswordAuthentication no' }
+    - { regexp: '^#?GatewayPorts ', string: 'GatewayPorts no' }
+  loop_control:
+    label: "{{ item.string }}"
+  notify: restart_sshd
+
+
+

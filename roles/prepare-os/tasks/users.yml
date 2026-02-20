@@ -1,0 +1,45 @@
+- name: Group exists or is deleted
+  group:
+    name: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
+  loop: "{{ linux_groups }}"
+  loop_control:
+    label: "{{ item.name }} {{ item.state | default('present') }}"
+  ignore_errors: yes
+
+- name: User exists or is deleted
+  user:
+    name: '{{ item.name }}'
+    password: '{{ item.password | default("*") }}'
+    groups: '{{ item.groups | default("") }}'
+    shell: '{{ item.shell | default("/bin/bash") }}'
+    create_home: '{{ item.create_home | default("yes") }}'
+    state: '{{ item.state | default("present") }}'
+    remove: '{{ item.remove | default("no") }}'
+  loop: "{{ linux_users }}"
+  loop_control:
+    label: "{{ item.name }} {{ item.state | default('present') }}"
+
+- name: ~/.ssh directory exists for existed user
+  file:
+    state: directory
+    dest: '/home/{{ item.name }}/.ssh'
+    mode: 0700
+    owner: '{{ item.name }}'
+  when:
+    - item.state == "present"
+  loop: "{{ linux_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Ssh key is added for existed user
+  copy:
+    content: '{{ item.pubkeys | default("") }}'
+    dest: '/home/{{ item.name }}/.ssh/authorized_keys'
+    mode: 0600
+    owner: '{{ item.name }}'
+  when:
+    - item.state == "present"
+  loop: "{{ linux_users }}"
+  loop_control:
+    label: "{{ item.name }}"  

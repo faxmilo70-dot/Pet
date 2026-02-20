@@ -1,0 +1,61 @@
+linux_users:
+  - name: ansible
+    groups: ansible, sudo, users, docker
+    state: present
+    pubkeys: |
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw5rgJ8RYV53HmX/xqCG4G0HCFjXxyxw1yyJ2cJRAnlKJZfIViWWO9atVd6iPLCRTIYmrqg4KXOzQ3CkrzpN2mPhFdRsJc8pSgaRMuxEpeI97Q1dK895IShO+0ez/v9NU7ZB/e38DoKPitX7fxWB255LDpVVUNtjFdve9WUap84rzEr5r73guPrShyxMyNTEhzTZVpuUPghmSx1XIKNWsg2B9iEsL7wMHXc6lgRD1JeFXpx8/WcMpziAB0gIbVQFTrSKWmBN2FY03bohY8V0LlzXd4qJp15/NHz3PW39USrXTSEI02+oqOWvJQYX/Z2Aw7AlY7l6EwIzFLsUAXn9yw+0OjF2a6FfxdJ0IrM2tXFcTM6mv/9uwDpW19LSCGgMEfi85nrMpu1bKlRIpybuvxLDZeGNXSKW61nz0puti91+MTBICThpoGOD15BkEA4SfnDzp7QnA0Qm3l4BTBnBqsFY6mP1F3W0miG/uHde33fs33AC9bzx+9mhM0Q6dScTk= user@Lennar
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAePeZeAophrwwOHEKOR/GWaogOkeauJAaUx5zV3fQcL ansible 
+  - name: lennar
+    groups: lennar, sudo, users, docker
+    state: present
+    pubkeys: |
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw5rgJ8RYV53HmX/xqCG4G0HCFjXxyxw1yyJ2cJRAnlKJZfIViWWO9atVd6iPLCRTIYmrqg4KXOzQ3CkrzpN2mPhFdRsJc8pSgaRMuxEpeI97Q1dK895IShO+0ez/v9NU7ZB/e38DoKPitX7fxWB255LDpVVUNtjFdve9WUap84rzEr5r73guPrShyxMyNTEhzTZVpuUPghmSx1XIKNWsg2B9iEsL7wMHXc6lgRD1JeFXpx8/WcMpziAB0gIbVQFTrSKWmBN2FY03bohY8V0LlzXd4qJp15/NHz3PW39USrXTSEI02+oqOWvJQYX/Z2Aw7AlY7l6EwIzFLsUAXn9yw+0OjF2a6FfxdJ0IrM2tXFcTM6mv/9uwDpW19LSCGgMEfi85nrMpu1bKlRIpybuvxLDZeGNXSKW61nz0puti91+MTBICThpoGOD15BkEA4SfnDzp7QnA0Qm3l4BTBnBqsFY6mP1F3W0miG/uHde33fs33AC9bzx+9mhM0Q6dScTk= user@Lennar
+  - name: fax1
+    groups: fax1, sudo, users, docker
+    state: present
+    pubkeys: |
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPyf7lkbDVEUG9a7KJ0jGJky5Hi5Dmq4s1k7jRN6PZi7 Max
+
+linux_groups:      
+  - name: users-ssh
+    state: present
+  - name: robots
+    state: present
+  - name: docker
+    state: present
+  - name: ansible
+    state: present
+
+unwanted_packages:
+  - apparmor
+  - snap-confine
+  - snapd
+  - apport
+purge_unwanted_packages: true
+
+tools:
+  - wget
+  - htop
+  - tcpdump
+  - net-tools
+  - iotop
+  - curl
+  - sysstat
+  - traceroute
+  - iproute2
+  - nmon
+  - lsof
+  - nano
+  - tmux
+  - mc
+  - vim
+  - dstat
+  - ncdu
+  - bash-completion
+  - atop
+  - ca-certificates
+  - rsyslog
+  - rsync
+  - bzip2
+  - unzip
+  - tar

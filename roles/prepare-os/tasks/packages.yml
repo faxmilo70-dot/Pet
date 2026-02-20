@@ -1,0 +1,14 @@
+- name: apt_update
+  ansible.builtin.apt:  
+    update_cache: true
+
+- name: tools
+  ansible.builtin.apt:
+    name: '{{ tools }}'
+
+- name: Purge unwanted packages
+  when: purge_unwanted_packages | bool
+  ansible.builtin.apt:
+    name: '{{ unwanted_packages }}'
+    state: absent
+    purge: true

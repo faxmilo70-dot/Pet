@@ -1,0 +1,16 @@
+timezone: Europe/Moscow
+
+tools: []
+
+unwanted_packages: []
+
+purge_unwanted_packages: true
+
+linux_groups: []
+
+linux_users: []
+
+ssh_port: 22 
+main_users_and_groups: true
+all_base_settings: true
+simple_tools_update_cache: true
