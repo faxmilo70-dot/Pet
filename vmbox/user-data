@@ -9,7 +9,7 @@ users:
     lock_passwd: true
     ssh_authorized_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw5rgJ8RYV53HmX/xqCG4G0HCFjXxyxw1yyJ2cJRAnlKJZfIViWWO9atVd6iPLCRTIYmrqg4KXOzQ3CkrzpN2mPhFdRsJc8pSgaRMuxEpeI97Q1dK895IShO+0ez/v9NU7ZB/e38DoKPitX7fxWB255LDpVVUNtjFdve9WUap84rzEr5r73guPrShyxMyNTEhzTZVpuUPghmSx1XIKNWsg2B9iEsL7wMHXc6lgRD1JeFXpx8/WcMpziAB0gIbVQFTrSKWmBN2FY03bohY8V0LlzXd4qJp15/NHz3PW39USrXTSEI02+oqOWvJQYX/Z2Aw7AlY7l6EwIzFLsUAXn9yw+0OjF2a6FfxdJ0IrM2tXFcTM6mv/9uwDpW19LSCGgMEfi85nrMpu1bKlRIpybuvxLDZeGNXSKW61nz0puti91+MTBICThpoGOD15BkEA4SfnDzp7QnA0Qm3l4BTBnBqsFY6mP1F3W0miG/uHde33fs33AC9bzx+9mhM0Q6dScTk= user@Lennar
-
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPyf7lkbDVEUG9a7KJ0jGJky5Hi5Dmq4s1k7jRN6PZi7 Max
 ssh_pwauth: true
 disable_root: false
 
@@ -36,7 +36,7 @@ write_files:
           enp0s17:
             dhcp4: false
             addresses:
-              - 10.0.2.210/24
+              - 10.0.2.230/24
             gateway4: 10.0.2.1
             nameservers:
               addresses:

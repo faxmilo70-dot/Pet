@@ -118,7 +118,7 @@ param (
     [Parameter(Mandatory = $true)]
     [string]$NatNetwork,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $false)]
     [string]$NatNetworkPrefix,
 
     [Parameter(Mandatory = $true)]
@@ -181,7 +181,7 @@ foreach ($Name in $Names) {
         continue
     }
 
-    Write-Host "`n=== Создаю VM: $Name ===" -ForegroundColor Cyan
+    Write-Host "`n=== Создаю VM: $Name ===" -ForegroundColor Cyan   
 
     # --- Импорт OVA ---
     VBoxManage import "$OvaPath" `
@@ -194,7 +194,7 @@ foreach ($Name in $Names) {
     $DiskPath = VBoxManage showvminfo $Name |
         Select-String -Pattern '\.vmdk' |
         ForEach-Object {
-            ($_ -split ':', 2)[1].Trim()
+            ($_ -split ':', 2)[1].Trim().Trim('"')
         }
 
     if (-not $DiskPath) {

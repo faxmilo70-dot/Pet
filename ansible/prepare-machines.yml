@@ -9,6 +9,6 @@
       ansible.builtin.include_role:
         name: prepare-os
       vars: 
-        all_base_settings: false
+        all_base_settings: true
         main_users_and_groups: true
-        simple_tools_update_cache: false
+        simple_tools_update_cache: true

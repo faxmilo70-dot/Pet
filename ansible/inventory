@@ -1,5 +1,5 @@
 [ansible_try]
-ansible ansible_host=26.13.115.96 ansible_port=33130 
+max-ansible-3 ansible_host=26.13.115.96 ansible_port=33230 
 max-ansible-1 ansible_host=26.219.142.181 ansible_port=33110 
 max-ansible-2 ansible_host=26.219.142.181 ansible_port=33120 
 [server]
