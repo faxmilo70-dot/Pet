@@ -1,0 +1,36 @@
+css
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, sans-serif;
+  background: #f4f4f7;
+  margin: 0;
+  padding: 2rem;
+}
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+h1 { margin-top: 0; }
+form { display: flex; gap: .5rem; margin-bottom: 1rem; }
+input[type=text] {
+  flex: 1; padding: .6rem; border: 1px solid #ccc; border-radius: 6px;
+}
+button {
+  padding: .6rem 1rem; border: none; border-radius: 6px;
+  background: #4a7cff; color: #fff; cursor: pointer;
+}
+button:hover { background: #3a66d6; }
+ul { list-style: none; padding: 0; margin: 0; }
+li {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .5rem 0; border-bottom: 1px solid #eee;
+}
+li.done span { text-decoration: line-through; color: #888; }
+li span { flex: 1; }
+li button {
+  background: transparent; color: #c33; padding: .2rem .5rem; font-size: 1rem;
+}
