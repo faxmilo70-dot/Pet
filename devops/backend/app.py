@@ -1,56 +1,64 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import sqlite3
+from dotenv import load_dotenv
+import psycopg2
+import psycopg2.extras
 import os
 
-app = Flask(__name__)
-CORS(app)  # чтобы frontend с другого порта мог обращаться
+load_dotenv()
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'tasks.db')
+app = Flask(__name__)
+CORS(app)
+
+DB_URL = os.getenv('DATABASE_URL', 'postgresql://petuser:secret@localhost:5432/petapp')
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DB_URL)
+    conn.autocommit = False
     return conn
 
 def init_db():
     with get_db() as conn:
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS tasks (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                done INTEGER DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
+        with conn.cursor() as cur:
+            cur.execute('''
+                CREATE TABLE IF NOT EXISTS tasks (
+                    id SERIAL PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    done BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
         conn.commit()
 
 @app.route('/api/tasks', methods=['GET'])
 def list_tasks():
     with get_db() as conn:
-        rows = conn.execute('SELECT * FROM tasks ORDER BY id DESC').fetchall()
-        return jsonify([dict(r) for r in rows])
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute('SELECT * FROM tasks ORDER BY id DESC')
+            return jsonify([dict(r) for r in cur.fetchall()])
 
 @app.route('/api/tasks', methods=['POST'])
 def create_task():
     data = request.get_json() or {}
-    title = data.get('title', '').strip()
+    title = (data.get('title') or '').strip()
     if not title:
         return jsonify({'error': 'title is required'}), 400
     with get_db() as conn:
-        cur = conn.execute('INSERT INTO tasks (title) VALUES (?)', (title,))
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute('INSERT INTO tasks (title) VALUES (%s) RETURNING *', (title,))
+            row = cur.fetchone()
         conn.commit()
-        row = conn.execute('SELECT * FROM tasks WHERE id = ?', (cur.lastrowid,)).fetchone()
         return jsonify(dict(row)), 201
 
 @app.route('/api/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
     data = request.get_json() or {}
-    done = 1 if data.get('done') else 0
+    done = bool(data.get('done'))
     with get_db() as conn:
-        conn.execute('UPDATE tasks SET done = ? WHERE id = ?', (done, task_id))
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute('UPDATE tasks SET done = %s WHERE id = %s RETURNING *', (done, task_id))
+            row = cur.fetchone()
         conn.commit()
-        row = conn.execute('SELECT * FROM tasks WHERE id = ?', (task_id,)).fetchone()
         if row is None:
             return jsonify({'error': 'not found'}), 404
         return jsonify(dict(row))
@@ -58,7 +66,8 @@ def update_task(task_id):
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     with get_db() as conn:
-        conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
+        with conn.cursor() as cur:
+            cur.execute('DELETE FROM tasks WHERE id = %s', (task_id,))
         conn.commit()
     return '', 204
 
