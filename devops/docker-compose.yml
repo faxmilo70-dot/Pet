@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: petapp_db
+    environment:
+      POSTGRES_USER: petuser
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: petapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: petapp_backend
+    environment:
+      DATABASE_URL: postgresql://petuser:secret@db:5432/petapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: petapp_nginx
+    ports:
+      - "80:80"
+    volumes:
+      # Монтируем конфиг Nginx из твоего проекта
+      - ./nginx/petapp.conf:/etc/nginx/conf.d/default.conf:ro
+      # Монтируем статику фронтенда
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
